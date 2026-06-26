@@ -12,12 +12,20 @@ Download and include the `UPNG.js` file in your code.
 
 UPNG.js supports APNG and the interface expects "frames". Regular PNG is just a single-frame animation (single-item array).
 
-#### `UPNG.encode(imgs, w, h, cnum, [dels])`
+#### `UPNG.encode(imgs, w, h, cnum, [dels], [tabs], [forbidPlte])`
 * `imgs`: array of frames. A frame is an ArrayBuffer containing the pixel data (RGBA, 8 bits per channel)
 * `w`, `h` : width and height of the image
 * `cnum`: number of colors in the result;  0: all colors (lossless PNG)
 * `dels`: array of millisecond delays for each frame (only when 2 or more frames)
+* `tabs`: object with optional extra chunks to write into the file (see below)
+* `forbidPlte`: when `true`, never produce a palette (indexed-color) image, even when 256 colors or fewer would allow it. Default `false`
 * returns an ArrayBuffer with binary data of a PNG file
+
+The `tabs` object may hold any of these optional keys, each written as the corresponding PNG chunk:
+* `loop`: number of times an animation plays (APNG `acTL` num_plays); `0` = infinite (the default). Only used when there are 2 or more frames
+* `sRGB`: sRGB rendering intent byte — `0` perceptual, `1` relative colorimetric, `2` saturation, `3` absolute colorimetric
+* `pHYs`: physical pixel dimensions as `[ppuX, ppuY, unit]`, where `unit` is `0` (unknown) or `1` (metre)
+* `iCCP`: ICC color profile as raw bytes (e.g. a `Uint8Array`); UPNG deflates it and stores it under the profile name "ICC profile"
 
 UPNG.js can do a lossy minification of PNG files, similar to [TinyPNG](https://tinypng.com/) and other tools. It performed quantization with [k-means algorithm](https://en.wikipedia.org/wiki/K-means_clustering) in the past, but now we use [K-d trees](https://en.wikipedia.org/wiki/K-d_tree).
 
