@@ -1,5 +1,9 @@
 
 
+// Module wrapper (fork): provide `pako` for the encoder (CommonJS/bundler, or browser global).
+// The decoder ships its own inflate; pako is only used for deflate while encoding.
+var pako = (typeof require === "function") ? require("pako") : (typeof window !== "undefined" ? window.pako : undefined);
+
 var UPNG = (function() {
 	
 	var _bin = {
@@ -919,7 +923,7 @@ if(G>r)r=G;i++}while(i<y){A[i<<1]=0;A[(i<<1)+1]=0;i++}return r}return v}();
 		var opts;  if(levelZero) opts={level:0};
 		
 		
-		var CMPR = (data.length>10e6 && window.UZIP!=null) ? window.UZIP : pako;
+		var CMPR = (data.length>10e6 && typeof window!=="undefined" && window.UZIP!=null) ? window.UZIP : pako;
 		
 		var time = Date.now();
 		for(var i=0; i<ftry.length; i++) {
@@ -1222,4 +1226,8 @@ if(G>r)r=G;i++}while(i<y){A[i<<1]=0;A[(i<<1)+1]=0;i++}return r}return v}();
 	UPNG.quantize.getKDtree=getKDtree;
 	UPNG.quantize.getNearest=getNearest;
 })();
+
+// Module export (fork): CommonJS/bundler, or attach to browser global.
+if (typeof module === "object" && module.exports) { module.exports = UPNG; }
+else if (typeof window !== "undefined") { window.UPNG = UPNG; }
 
