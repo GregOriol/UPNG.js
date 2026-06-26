@@ -1,7 +1,7 @@
 {
   "name": "upng-js",
   "description": "Small, fast and advanced PNG / APNG encoder and decoder",
-  "version": "2.2.0-fork.1",
+  "version": "2.2.0-fork.2",
   "homepage": "https://github.com/GregOriol/UPNG.js",
   "author": "photopea (https://github.com/photopea)",
   "contributors": [
@@ -13,7 +13,12 @@
   "bugs": {
     "url": "https://github.com/GregOriol/UPNG.js/issues"
   },
-  "main": "UPNG",
+  "type": "module",
+  "main": "UPNG.js",
+  "module": "UPNG.js",
+  "exports": {
+    ".": "./UPNG.js"
+  },
   "keywords": [
     "png",
     "apng",
@@ -21,6 +26,6 @@
     "conversion"
   ],
   "dependencies": {
-    "pako": "^1.0.5"
+    "pako": "^2.0.0"
   }
 }

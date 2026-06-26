@@ -1,8 +1,4 @@
-
-
-// Module wrapper (fork): provide `pako` for the encoder (CommonJS/bundler, or browser global).
-// The decoder ships its own inflate; pako is only used for deflate while encoding.
-var pako = (typeof require === "function") ? require("pako") : (typeof window !== "undefined" ? window.pako : undefined);
+import { deflate } from 'pako';
 
 var UPNG = (function() {
 	
@@ -583,7 +579,7 @@ if(G>r)r=G;i++}while(i<y){A[i<<1]=0;A[(i<<1)+1]=0;i++}return r}return v}();
 		var leng = 8 + (16+5+4) /*+ (9+4)*/ + (anim ? 20 : 0);
 		if(tabs["sRGB"]!=null) leng += 8+1+4;
 		if(tabs["pHYs"]!=null) leng += 8+9+4;
-		if(tabs["iCCP"]!=null) {  cicc = pako.deflate(tabs["iCCP"]);  leng += 8 + 11 + 2 + cicc.length + 4;  }
+		if(tabs["iCCP"]!=null) {  cicc = deflate(tabs["iCCP"]);  leng += 8 + 11 + 2 + cicc.length + 4;  }
 		if(nimg.ctype==3) {
 			var dl = nimg.plte.length;
 			for(var i=0; i<dl; i++) if((nimg.plte[i]>>>24)!=255) pltAlpha = true;
@@ -923,7 +919,7 @@ if(G>r)r=G;i++}while(i<y){A[i<<1]=0;A[(i<<1)+1]=0;i++}return r}return v}();
 		var opts;  if(levelZero) opts={level:0};
 		
 		
-		var CMPR = (data.length>10e6 && typeof window!=="undefined" && window.UZIP!=null) ? window.UZIP : pako;
+		var deflateFn = (data.length>10e6 && typeof window!=="undefined" && window.UZIP!=null) ? window.UZIP.deflate : deflate;
 		
 		var time = Date.now();
 		for(var i=0; i<ftry.length; i++) {
@@ -933,7 +929,7 @@ if(G>r)r=G;i++}while(i<y){A[i<<1]=0;A[(i<<1)+1]=0;i++}return r}return v}();
 			//var dfl = pako["deflate"](data), dl=dfl.length-4;
 			//var crc = (dfl[dl+3]<<24)|(dfl[dl+2]<<16)|(dfl[dl+1]<<8)|(dfl[dl+0]<<0);
 			//console.log(crc, UZIP.adler(data,2,data.length-6));
-			fls.push(CMPR["deflate"](data,opts));
+			fls.push(deflateFn(data,opts));
 		}
 		
 		var ti, tsize=1e9;
@@ -1227,7 +1223,4 @@ if(G>r)r=G;i++}while(i<y){A[i<<1]=0;A[(i<<1)+1]=0;i++}return r}return v}();
 	UPNG.quantize.getNearest=getNearest;
 })();
 
-// Module export (fork): CommonJS/bundler, or attach to browser global.
-if (typeof module === "object" && module.exports) { module.exports = UPNG; }
-else if (typeof window !== "undefined") { window.UPNG = UPNG; }
-
+export default UPNG;
